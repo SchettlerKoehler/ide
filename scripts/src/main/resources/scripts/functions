@@ -898,7 +898,9 @@ function doInstall() {
     doEcho "Linking ${install_path} to ${target_path}"
     if doIsWindows
     then
-      cmd //c mklink "${install_path}" "${target_path}"
+      install_path_win=$(echo "$install_path" | sed -e 's/^\///' -e 's/\//\\/g' -e 's/^./\0:/')
+      target_path_win=$(echo "$target_path" | sed -e 's/^\///' -e 's/\//\\/g' -e 's/^./\0:/')
+      cmd //c mklink "${target_path_win}" "${install_path_win}"
       if [ "${?}" != 0 ]
       then
         doFail "Creating symbolic links is not supported on your windows operating system.\nPlease read the documentation how to properly configure your OS or disable this feature by removing the DEVON_SOFTWARE_PATH variable."
